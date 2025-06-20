@@ -7,15 +7,23 @@ from jsonschema import validate, ValidationError
 import re
 
 class OntologyParser:
-    def __init__(self, ontology_url):
+    def __init__(self, ontology_ref):
         self.graph = Graph()
-        response = requests.get(ontology_url)
-        response.raise_for_status()
-        self.graph.parse(data=response.text, format='ttl')
+
+        if ontology_ref.startswith('http'):
+            response = requests.get(ontology_ref)
+            response.raise_for_status()
+            response_text = response.text
+        else:
+            with open(ontology_ref, 'r', encoding='utf-8') as f:
+                response_text = f.read().replace('\r\n', '\n')
+                # print(response_text)
+        self.graph.parse(data=response_text, format='ttl')
         self.key_map = {
             'bpx': URIRef("https://w3id.org/emmo/domain/battery-model-lithium-ion#bmli_0a5b99ee_995b_4899_a79b_925a4086da37"),
             'cidemod': URIRef("https://w3id.org/emmo/domain/battery-model-lithium-ion#bmli_1b718841_5d72_4071_bb71_fc4a754f5e30"),
-            'battmo': URIRef("https://w3id.org/emmo/domain/battery-model-lithium-ion#bmli_2c718841_6d73_5082_bb81_gc5b754f6e40")  # Placeholder URI
+            'battmo.m': URIRef("https://w3id.org/emmo/domain/battery-model-lithium-ion#bmli_2c718841_6d73_5082_bb81_gc5b754f6e40")  # Placeholder URI
+            'battmo.jl': URIRef("https://w3id.org/emmo/domain/battery-model-lithium-ion#bmli_2c718841_6d73_5082_bb81_gc5b754f6e40")  # Placeholder URI
         }
 
     def parse_key(self, key):
@@ -183,63 +191,65 @@ class ParameterMapper:
         self.defaults_used = {path for path in self.defaults_used if not any(k in path for k in ["Parameterisation", "Header"])}
 
 if __name__ == "__main__":
-    ontology_url = 'https://w3id.org/emmo/domain/battery-model-lithium-ion/latest'
+    #ontology_ref = 'https://w3id.org/emmo/domain/battery-model-lithium-ion/latest'
+    ontology_ref = 'assets/battery-model-lithium-ion.ttl'
     input_json_url = 'https://raw.githubusercontent.com/cidetec-energy-storage/cideMOD/main/data/data_Chen_2020/params_tuned_vOCPexpression.json'
     output_json_path = 'converted_battery_parameters.json'
     defaults_json_path = 'defaults_used.json'
     template_url = 'https://raw.githubusercontent.com/BIG-MAP/ModelMapper/main/assets/bpx_template.json'
     input_type = 'cidemod'
-    output_type = 'bpx'
+    #output_type = 'bpx'
+    output_type = 'battmo.m'
 
     # Initialize the OntologyParser
-    ontology_parser = OntologyParser(ontology_url)
+    ontology_parser = OntologyParser(ontology_ref)
     mappings = ontology_parser.get_mappings(input_type, output_type)
     print("Mappings:", json.dumps({str(k): str(v) for k, v in mappings.items()}, indent=4))
 
-    # Load the input JSON file
-    input_data = JSONLoader.load(input_json_url)
-    print("Input Data:", json.dumps(input_data, indent=4))
+    # # Load the input JSON file
+    # input_data = JSONLoader.load(input_json_url)
+    # print("Input Data:", json.dumps(input_data, indent=4))
 
-    # Load the template JSON file
-    template_data = JSONLoader.load(template_url)
-    template_data.pop("Validation", None)  # Remove validation if it exists in the template
+    # # Load the template JSON file
+    # template_data = JSONLoader.load(template_url)
+    # template_data.pop("Validation", None)  # Remove validation if it exists in the template
 
-    # Map the parameters using the mappings from the ontology
-    parameter_mapper = ParameterMapper(mappings, template_data, input_json_url, output_type, input_type)
-    output_data = parameter_mapper.map_parameters(input_data)
-    defaults_used_data = list(parameter_mapper.defaults_used)
-    print("Output Data:", json.dumps(output_data, indent=4))
+    # # Map the parameters using the mappings from the ontology
+    # parameter_mapper = ParameterMapper(mappings, template_data, input_json_url, output_type, input_type)
+    # output_data = parameter_mapper.map_parameters(input_data)
+    # defaults_used_data = list(parameter_mapper.defaults_used)
+    # print("Output Data:", json.dumps(output_data, indent=4))
 
-    # Write the output JSON file
-    JSONWriter.write(output_data, output_json_path)
+    # # Write the output JSON file
+    # JSONWriter.write(output_data, output_json_path)
 
-    # Write the defaults used JSON file
-    JSONWriter.write(defaults_used_data, defaults_json_path)
-    
-    # Load the DFN model
-    model = pybamm.lithium_ion.DFN()
+    # # Write the defaults used JSON file
+    # JSONWriter.write(defaults_used_data, defaults_json_path)
 
-    # Load the parameter values
-    parameter_values = pybamm.ParameterValues.create_from_bpx('converted_battery_parameters.json')
+    # # Load the DFN model
+    # model = pybamm.lithium_ion.DFN()
 
-    # Define the experiment: Charge from SOC=0.01, then discharge
-    experiment = pybamm.Experiment([
-        ("Charge at C/5 until 4.2 V",
-         "Hold at 4.2 V until 1 mA",
-         "Rest for 1 hour",
-         "Discharge at C/5 until 2.5 V")
-    ])
+    # # Load the parameter values
+    # parameter_values = pybamm.ParameterValues.create_from_bpx('converted_battery_parameters.json')
 
-    # Create the simulation with the experiment
-    sim = pybamm.Simulation(model, experiment=experiment, parameter_values=parameter_values)
+    # # Define the experiment: Charge from SOC=0.01, then discharge
+    # experiment = pybamm.Experiment([
+    #     ("Charge at C/5 until 4.2 V",
+    #      "Hold at 4.2 V until 1 mA",
+    #      "Rest for 1 hour",
+    #      "Discharge at C/5 until 2.5 V")
+    # ])
+
+    # # Create the simulation with the experiment
+    # sim = pybamm.Simulation(model, experiment=experiment, parameter_values=parameter_values)
 
 
-    # Define initial concentration in negative and positive electrodes
-    parameter_values["Initial concentration in negative electrode [mol.m-3]"] = 0.0279 * parameter_values["Maximum concentration in negative electrode [mol.m-3]"]
-    parameter_values["Initial concentration in positive electrode [mol.m-3]"] = 0.9084 * parameter_values["Maximum concentration in positive electrode [mol.m-3]"]
+    # # Define initial concentration in negative and positive electrodes
+    # parameter_values["Initial concentration in negative electrode [mol.m-3]"] = 0.0279 * parameter_values["Maximum concentration in negative electrode [mol.m-3]"]
+    # parameter_values["Initial concentration in positive electrode [mol.m-3]"] = 0.9084 * parameter_values["Maximum concentration in positive electrode [mol.m-3]"]
 
-    # Solve the simulation
-    sim.solve()
+    # # Solve the simulation
+    # sim.solve()
 
-    # Plot the results
-    sim.plot()
+    # # Plot the results
+    # sim.plot()

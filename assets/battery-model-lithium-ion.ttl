@@ -48,7 +48,7 @@
     emmo:EMMO_967080e5_2f42_4eb2_a3a9_c58143e835f9 "the initial amount concentration of lithium in an electrolyte"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Electrolyte','Initial concentration [mol.m-3]']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['electrolyte','initial_concentration','value']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['Electrolyte', 'species', 'nominalConcentration']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['Electrolyte', 'species', 'nominalConcentration']"@en .
 
 
 
@@ -57,7 +57,7 @@
     rdfs:subClassOf electrochemistry:electrochemistry_a5571263_f153_448f_84a3_cd18092cf8fa ;
     skos:prefLabel "PositiveElectrodeActiveMaterialVolumetricSurfaceArea"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Positive electrode','Surface area per unit volume [m-1]']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['PositiveElectrode','Coating','ActiveMaterial','Interface','volumetricSurfaceArea']"@en.
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['PositiveElectrode','Coating','ActiveMaterial','Interface','volumetricSurfaceArea']"@en.
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_0e2f4fe6_570a_4d13_81e9_de1d4f9987af
@@ -66,7 +66,7 @@
     skos:prefLabel "NegativeElectrodeActiveMaterialOpenCircuitVoltage"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Negative electrode','OCP [V]']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['negative_electrode','active_materials',0,'OCP','value']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['NegativeElectrode','Coating','ActiveMaterial','Interface','openCircuitPotential']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['NegativeElectrode','Coating','ActiveMaterial','Interface','openCircuitPotential']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_0ea21f71_d1bd_4714_a260_b991e6d4bcf7
@@ -84,7 +84,7 @@
     skos:prefLabel "ElectrolyteConductivity"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Electrolyte','Conductivity [S.m-1]']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['electrolyte','ionic_conductivity','value']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['Electrolyte','ionicConductivity']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['Electrolyte','ionicConductivity']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_21da0fe9_9fb6_4840_a12f_fbcc1ba84fb3
@@ -93,7 +93,7 @@
     skos:prefLabel "NegativeElectrodeLithiumStoichiometricCoefficientAtSOC0"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Negative electrode','Minimum stoichiometry']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['negative_electrode','active_materials',0,'stoichiometry0','value']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['NegativeElectrode','Coating','ActiveMaterial','Interface','guestStoichiometry0']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['NegativeElectrode','Coating','ActiveMaterial','Interface','guestStoichiometry0']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_404126e0_cb1b_44e4_98dc_2474185767a1
@@ -102,7 +102,7 @@
     skos:prefLabel "PositiveElectrodeReactionRateConstant"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Positive electrode','Reaction rate constant [mol.m-2.s-1]']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['positive_electrode','active_materials',0,'kinetic_constant','value']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['PositiveElectrode','Coating','ActiveMaterial','Interface','reactionRateConstant']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['PositiveElectrode','Coating','ActiveMaterial','Interface','reactionRateConstant']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_43f77743_1af6_4a0f_9cc6_285c2a450549
@@ -111,7 +111,7 @@
     skos:prefLabel "PositiveElectrodeElectronicConductivity"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Positive electrode','Conductivity [S.m-1]']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['positive_electrode','electronic_conductivity','value']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['PositiveElectrode','ActiveMatrial','electronicConductivity']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['PositiveElectrode','ActiveMatrial','electronicConductivity']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_47288277_4aed_447e_b659_0c975d031406
@@ -120,7 +120,7 @@
     skos:prefLabel "SeparatorThickness"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Separator','Thickness [m]']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['separator','thickness','value']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['Separator','thickness']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['Separator','thickness']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_4c274506_af5b_4ef1_8217_829ffd459f28
@@ -130,7 +130,7 @@
     emmo:EMMO_967080e5_2f42_4eb2_a3a9_c58143e835f9 "the diffusivity of lithium in an electrolyte"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Electrolyte','Diffusivity [m2.s-1]']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['electrolyte','diffusion_constant','value']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['Electrolyte','diffusionCoefficient']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['Electrolyte','diffusionCoefficient']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_4d69edda_d2fa_40b0_9c1e_52e08debf578
@@ -140,7 +140,7 @@
     emmo:EMMO_967080e5_2f42_4eb2_a3a9_c58143e835f9 "the activation energy barrier in an Arrhenius expression for the diffusivity of lithium in the positive electrode"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Positive electrode','Diffusivity activation energy [J.mol-1]']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['positive_electrode','active_materials',0,'diffusion_constant','arrhenius','activation_energy']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['PositiveElectrode','Coating','ActiveMaterial','SolidDiffusion','activationEnergyOfDiffusion']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['PositiveElectrode','Coating','ActiveMaterial','SolidDiffusion','activationEnergyOfDiffusion']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_50247e71_75fe_4986_959e_fd06c6be98db
@@ -150,7 +150,7 @@
     emmo:EMMO_967080e5_2f42_4eb2_a3a9_c58143e835f9 "the diffusivity of lithium in the negative electrode"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Negative electrode','Diffusivity [m2.s-1]']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['negative_electrode','active_materials',0,'diffusion_constant','value']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['NegativeElectrode','Coating','ActiveMaterial','SolidDiffusion','referenceDiffusionCoefficient']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['NegativeElectrode','Coating','ActiveMaterial','SolidDiffusion','referenceDiffusionCoefficient']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_52ab4fdd_f945_4541_9ce6_cd6fd3a05861
@@ -159,7 +159,7 @@
     skos:prefLabel "PositiveElectrodeActiveMaterialOpenCircuitVoltage"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Positive electrode','OCP [V]']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['positive_electrode','active_materials',0,'OCP','value']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['PositiveElectrode','Coating','ActiveMaterial','Interface','openCircuitPotential']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['PositiveElectrode','Coating','ActiveMaterial','Interface','openCircuitPotential']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_56b9cd1f_5397_4385_9292_30d93d9e7a05
@@ -167,7 +167,7 @@
     rdfs:subClassOf electrochemistry:electrochemistry_d7f8cab9_b035_4ecd_be63_292672572526 ;
     skos:prefLabel "PostiveElectrodeActivationEnergyOfReaction"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Positive electrode','Reaction rate constant activation energy [J.mol-1]']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['PositiveElectrode','Coating','ActiveMaterial','Interface','activationEnergyOfReaction']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['PositiveElectrode','Coating','ActiveMaterial','Interface','activationEnergyOfReaction']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_56de36fe_e8e1_486c_8d29_061ac8d28c13
@@ -185,7 +185,7 @@
     skos:prefLabel "PositiveElectrodeActiveMaterialParticleRadius"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Positive electrode','Particle radius [m]']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['positive_electrode','active_materials',0,'particle_radius','value']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['PositiveElectrode','Coating','ActiveMaterial','SolidDiffusion','particleRadius']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['PositiveElectrode','Coating','ActiveMaterial','SolidDiffusion','particleRadius']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_5cb403c4_4f28_46cb_81c4_21c5c47ef14a
@@ -194,7 +194,7 @@
     skos:prefLabel "NegativeElectrodeCoatingPorosity"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Negative electrode','Porosity']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['negative_electrode','porosity','value']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['NegativeElectrode','Coating','porosity']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['NegativeElectrode','Coating','porosity']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_62f5beeb_6d1e_442a_8048_3ebe08882964
@@ -204,7 +204,7 @@
     emmo:EMMO_967080e5_2f42_4eb2_a3a9_c58143e835f9 "thickness of the positive electrode coating"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Positive electrode','Thickness [m]']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['positive_electrode','thickness','value']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['PositiveElectrode','Coating','thickness']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['PositiveElectrode','Coating','thickness']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_7481c4c9_c247_4248_a045_a1077230acba
@@ -213,7 +213,7 @@
     skos:prefLabel "PositiveElectrodeCoatingPorosity"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Positive electrode','Porosity']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['positive_electrode','porosity','value']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['PositiveElectrode','Coating','porosity']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['PositiveElectrode','Coating','porosity']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_80920875_62ac_4e29_b970_ec4316e76aa5
@@ -222,7 +222,7 @@
     skos:prefLabel "PositiveElectrodeLithiumStoichiometricCoefficientAtSOC0"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Positive electrode','Minimum stoichiometry']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['positive_electrode','active_materials',0,'stoichiometry1','value']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['PositiveElectrode','Coating','ActiveMaterial','Interface','guestStoichiometry0']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['PositiveElectrode','Coating','ActiveMaterial','Interface','guestStoichiometry0']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_86af4487_33c1_4562_a00b_3a8252ffe378
@@ -232,7 +232,7 @@
     emmo:EMMO_967080e5_2f42_4eb2_a3a9_c58143e835f9 "the activation energy barrier in an Arrhenius expression for the diffusivity of lithium in the negative electrode"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Negative electrode','Diffusivity activation energy [J.mol-1]']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['negative_electrode','active_materials',0,'diffusion_constant','arrhenius','activation_energy']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['NegativeElectrode','Coating','ActiveMaterial','SolidDiffusion','activationEnergyOfDiffusion']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['NegativeElectrode','Coating','ActiveMaterial','SolidDiffusion','activationEnergyOfDiffusion']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_8c16cb12_41c1_43bd_9e7c_2eea7b06a1f0
@@ -251,7 +251,7 @@
     skos:prefLabel "NegativeElectrodeLithiumStoichiometricCoefficientAtSOC100"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Negative electrode','Maximum stoichiometry']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['negative_electrode','active_materials',0,'stoichiometry1','value']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['NegativeElectrode','Coating','ActiveMaterial','Interface','guestStoichiometry100']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['NegativeElectrode','Coating','ActiveMaterial','Interface','guestStoichiometry100']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_99041897_5c08_40ed_9118_3e77e9b0e191
@@ -260,7 +260,7 @@
     skos:prefLabel "PositiveElectrodeLithiumStoichiometricCoefficientAtSOC100"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Positive electrode','Maximum stoichiometry']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['positive_electrode','active_materials',0,'stoichiometry0','value']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['PositiveElectrode','Coating','ActiveMaterial','Interface','guestStoichiometry100']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['PositiveElectrode','Coating','ActiveMaterial','Interface','guestStoichiometry100']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_9cba2158_26ba_4dd7_b082_ba66dbb960c7
@@ -287,7 +287,7 @@
     skos:prefLabel "SeparatorPorosity"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Separator','Porosity']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['separator','porosity','value']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['Separator','porosity']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['Separator','porosity']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_b4184e46_c53c_47cc_9bfc_186fd77836a5
@@ -306,7 +306,7 @@
     emmo:EMMO_967080e5_2f42_4eb2_a3a9_c58143e835f9 "the electronic conductivity of the negative electrode"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Negative electrode','Conductivity [S.m-1]']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['negative_electrode','electronic_conductivity','value']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['NegativeElectrode','ActiveMatrial','electronicConductivity']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['NegativeElectrode','ActiveMatrial','electronicConductivity']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_bfe553c2_a63e_49b6_a209_0855dfc39724
@@ -315,7 +315,7 @@
     skos:prefLabel "NegativeElectrodeActiveMaterialParticleRadius"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Negative electrode','Particle radius [m]']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['negative_electrode','active_materials',0,'particle_radius','value']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['NegativeElectrode','Coating','ActiveMaterial','SolidDiffusion','particleRadius']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['NegativeElectrode','Coating','ActiveMaterial','SolidDiffusion','particleRadius']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_c5dcb1a2_f2cf_421a_b8ae_47a88a61fce3
@@ -324,7 +324,7 @@
     skos:prefLabel "NegativeElectrodeReactionRateConstant"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Negative electrode','Reaction rate constant [mol.m-2.s-1]']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['negative_electrode','active_materials',0,'kinetic_constant','value']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['NegativeElectrode','Coating','ActiveMaterial','Interface','reactionRateConstant']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['NegativeElectrode','Coating','ActiveMaterial','Interface','reactionRateConstant']"@en .
 
 
 
@@ -333,7 +333,7 @@
     rdfs:subClassOf electrochemistry:electrochemistry_a5571263_f153_448f_84a3_cd18092cf8fa ;
     skos:prefLabel "NegativeElectrodeActiveMaterialVolumetricSurfaceArea"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Negative electrode','Surface area per unit volume [m-1]']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['NegativeElectrode','Coating','ActiveMaterial','Interface','volumetricSurfaceArea']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['NegativeElectrode','Coating','ActiveMaterial','Interface','volumetricSurfaceArea']"@en .
 
 
 
@@ -344,7 +344,7 @@
     emmo:EMMO_967080e5_2f42_4eb2_a3a9_c58143e835f9 "maximum concentration of lithium in the positive electrode"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Positive electrode','Maximum concentration [mol.m-3]']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['positive_electrode','active_materials',0,'maximum_concentration','value']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['PositiveElectrode','Coating','ActiveMaterial','Interface','saturationConcentration']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['PositiveElectrode','Coating','ActiveMaterial','Interface','saturationConcentration']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_ccde4e5f_ace4_41d1_b4d8_cbd63e6376e6
@@ -363,7 +363,7 @@
     emmo:EMMO_967080e5_2f42_4eb2_a3a9_c58143e835f9 "thickness of the negative electrode coating"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Negative electrode','Thickness [m]']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['negative_electrode','thickness','value']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['NegativeElectrode','Coating','thickness']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['NegativeElectrode','Coating','thickness']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_e3e78df2_d568_4ab7_8c0d_d3a2ee3ae282
@@ -373,7 +373,7 @@
     emmo:EMMO_967080e5_2f42_4eb2_a3a9_c58143e835f9 "transport number of lithium ion in electrolyte"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Electrolyte','Cation transference number']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['electrolyte','transference_number','value']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['Electrolyte','species', 'transferenceNumber']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['Electrolyte','species', 'transferenceNumber']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_e59188bb_ce66_49f6_84aa_ecb98e76941e
@@ -383,7 +383,7 @@
     emmo:EMMO_967080e5_2f42_4eb2_a3a9_c58143e835f9 "the diffusivity of lithium in the positive electrode"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Positive electrode','Diffusivity [m2.s-1]']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['positive_electrode','active_materials',0,'diffusion_constant','value']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['PositiveElectrode','Coating','ActiveMaterial','SolidDiffusion','referenceDiffusionCoefficient']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['PositiveElectrode','Coating','ActiveMaterial','SolidDiffusion','referenceDiffusionCoefficient']"@en .
 
 
 
@@ -394,7 +394,7 @@
     emmo:EMMO_967080e5_2f42_4eb2_a3a9_c58143e835f9 "maximum concentration of lithium in the negative electrode"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Negative electrode','Maximum concentration [mol.m-3]']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['negative_electrode','active_materials',0,'maximum_concentration','value']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['NegativeElectrode','Coating','ActiveMaterial','Interface','saturationConcentration']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['NegativeElectrode','Coating','ActiveMaterial','Interface','saturationConcentration']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_eac57b09_5cc9_41d7_b2c8_40218d7fd47c
@@ -410,7 +410,7 @@
     rdfs:subClassOf electrochemistry:electrochemistry_d7f8cab9_b035_4ecd_be63_292672572526 ;
     skos:prefLabel "NegativeElectrodeActivationEnergyOfReaction"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Negative electrode','Reaction rate constant activation energy [J.mol-1]']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['NegativeElectrode','Coating','ActiveMaterial','Interface','activationEnergyOfReaction']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['NegativeElectrode','Coating','ActiveMaterial','Interface','activationEnergyOfReaction']"@en .
 
 
 
@@ -420,17 +420,17 @@
 
     electrochemistry:electrochemistry_39a44af0_0e1a_4859_b550_bdabad64386e :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['simulation','initial_state','exterior_temperature','value']"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Cell','Ambient temperature [K]']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['ThermalModel','externalTemperature']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['ThermalModel','externalTemperature']"@en .
 
 
 electrochemistry:electrochemistry_534dd59c_904c_45d9_8550_ae9d2eb6bbc9 :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['simulation','triggers','voltage','lower']"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Cell','Lower voltage cut-off [V]']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['Control','lowerCutOffVoltage']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['Control','lowerCutOffVoltage']"@en .
 
 
 electrochemistry:electrochemistry_9c9b80a4_a00b_4b91_8e17_3a7831f2bf2f :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['simulation','initial_state','initial_temperature','value']"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Cell','Initial temperature [K]']"@en ;
-    :bmli_2c718841_6d73_5082_bb81_gc5b754f6e40 "['initT']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['initT']"@en .
 
 
 electrochemistry:electrochemistry_fa7790d6_07bb_4b0f_9965_55966828f5f3 :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['properties','area','value']"@en ;

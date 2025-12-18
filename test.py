@@ -172,7 +172,7 @@ class ParameterMapper:
                     return None
             return data
         except (KeyError, IndexError, ValueError, TypeError) as e:
-            print(f"Error accessing key {key} in path {keys}: {e}")
+            print(f"Warning: accessing key {key} in path {keys}: {e}")
             return None
 
     def set_value_from_path(self, data, keys, value):
@@ -227,6 +227,24 @@ class ParameterMapper:
         }
 
 
+def fix_battmo_porosity(label, input_path, input_data):
+    if (
+        label == "PositiveElectrodeCoatingPorosity"
+        or label == "NegativeElectrodeCoatingPorosity"
+    ):
+        # Get the volume fraction of active material in the positive electrode coating
+        vf_path = list(input_path)
+        vf_path[-1] = "volumeFraction"
+        vf_value = ParameterMapper.get_value_from_path(input_data, vf_path)
+        if vf_value is None:
+            ValueError(
+                f"Could not find volumeFraction for porosity calculcation for {label}"
+            )
+        else:
+            porosity = 1.0 - vf_value
+            return porosity
+
+
 RDF_JSON = URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#JSON")
 
 
@@ -257,20 +275,31 @@ def export_jsonld(
             continue
         mapped += 1
 
+        # # Get the skos::prefLabel
+        # for predicate, obj in ontology_parser.graph.predicate_objects(subject):
+        #     if str(predicate) == "http://www.w3.org/2004/02/skos/core#prefLabel":
+        #         label = str(obj)
+        #         break
+        # else:
+        #     label = "unknown"
+
+        # if input_type == "battmo.m" and "porosity" in input_path:
+        #     value = fix_battmo_porosity(label, input_path, input_data)
+
+        # print(f"[jsonld] Mapping subject {subject} using path {input_path}")
+
         value = ParameterMapper.get_value_from_path(input_data, input_path)
+        if value is None:
+            continue
 
-        # Always include the mapping path (so you can see what matched)
-        out_g.add((subject, input_key, Literal(raw_path_literal)))
-
-        # Only add a value triple if we actually found one
-        if value is not None:
-            if isinstance(value, (dict, list)):
-                out_g.add(
-                    (subject, RDF.value, Literal(json.dumps(value), datatype=RDF_JSON))
-                )
-            else:
-                out_g.add((subject, RDF.value, Literal(value)))
-            added += 1
+        # Emit the *actual value*, not the path string
+        if isinstance(value, (dict, list)):
+            out_g.add(
+                (subject, RDF.value, Literal(json.dumps(value), datatype=RDF_JSON))
+            )
+        else:
+            out_g.add((subject, RDF.value, Literal(value)))
+        added += 1
 
     print(
         f"[jsonld] subjects-with-path: {mapped}, values-found: {added}, triples: {len(out_g)}"

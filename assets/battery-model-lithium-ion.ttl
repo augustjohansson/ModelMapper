@@ -111,7 +111,7 @@
     skos:prefLabel "PositiveElectrodeElectronicConductivity"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Positive electrode','Conductivity [S.m-1]']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['positive_electrode','electronic_conductivity','value']"@en ;
-    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['PositiveElectrode','ActiveMatrial','electronicConductivity']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['PositiveElectrode','Coating','electronicConductivity']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_47288277_4aed_447e_b659_0c975d031406
@@ -306,7 +306,7 @@
     emmo:EMMO_967080e5_2f42_4eb2_a3a9_c58143e835f9 "the electronic conductivity of the negative electrode"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Negative electrode','Conductivity [S.m-1]']"@en ;
     :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['negative_electrode','electronic_conductivity','value']"@en ;
-    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['NegativeElectrode','ActiveMatrial','electronicConductivity']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['NegativeElectrode','Coating','electronicConductivity']"@en .
 
 
 ###  https://w3id.org/emmo/domain/battery-model-lithium-ion#modellib_bfe553c2_a63e_49b6_a209_0855dfc39724
@@ -425,7 +425,7 @@
 
 electrochemistry:electrochemistry_534dd59c_904c_45d9_8550_ae9d2eb6bbc9 :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['simulation','triggers','voltage','lower']"@en ;
     :bmli_0a5b99ee_995b_4899_a79b_925a4086da37 "['Parameterisation','Cell','Lower voltage cut-off [V]']"@en ;
-    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['Control','lowerCutOffVoltage']"@en .
+    :bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14 "['Control','lowerCutoffVoltage']"@en .
 
 
 electrochemistry:electrochemistry_9c9b80a4_a00b_4b91_8e17_3a7831f2bf2f :bmli_1b718841_5d72_4071_bb71_fc4a754f5e30 "['simulation','initial_state','initial_temperature','value']"@en ;

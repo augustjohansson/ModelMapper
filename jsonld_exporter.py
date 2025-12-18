@@ -5,8 +5,6 @@ from rdflib.namespace import RDF, RDFS, OWL, SKOS
 
 from collections import Counter
 from rdflib.namespace import RDF, OWL
-from collections import Counter
-from rdflib.namespace import RDF, OWL
 
 
 def _is_number_like(v: Any) -> bool:
@@ -275,7 +273,7 @@ def export_jsonld(
     has_property = out["@graph"]["hasProperty"]
 
     # Iterate subjects that have a mapping path for this input_type
-    for subject in g.subjects():
+    for subject in set(g.subjects(input_key, None)):
         # Find the mapping path literal for this subject
         raw_path_literal = None
         path = None
@@ -315,9 +313,6 @@ def export_jsonld(
             "rdfs:label": _label(g, subject),
         }
 
-        if "opencircuit" in prop_obj["rdfs:label"].lower():
-            breakpoint()
-
         # --- value handling (numeric / string / structured) ---
         if _is_number_like(value):
             numeric = float(value)
@@ -326,36 +321,44 @@ def export_jsonld(
                 "hasNumericalValue": numeric,
             }
 
-            # (units optional; keep your existing unit logic here if you want)
-            unit_class = _find_unit_class(g, subject, unit_pred) if unit_pred else None
-            if unit_class is not None:
-                unit_type = _curie(g, unit_class)
-                unit_obj: Dict[str, Any] = {"@type": unit_type}
+            # # (units optional; keep your existing unit logic here if you want)
+            # unit_class = _find_unit_class(g, subject, unit_pred) if unit_pred else None
+            # if unit_class is not None:
+            #     unit_type = _curie(g, unit_class)
+            #     unit_obj: Dict[str, Any] = {"@type": unit_type}
 
-                sym = (
-                    _find_unit_symbol(g, unit_class, symbol_pred)
-                    if symbol_pred
-                    else None
-                )
-                if sym is None and (
-                    "UnitOne" in unit_type or _localname(unit_class) == "UnitOne"
-                ):
-                    sym = "1"
-                if sym is not None:
-                    unit_obj["hasSymbolValue"] = sym
+            #     sym = (
+            #         _find_unit_symbol(g, unit_class, symbol_pred)
+            #         if symbol_pred
+            #         else None
+            #     )
+            #     if sym is None and (
+            #         "UnitOne" in unit_type or _localname(unit_class) == "UnitOne"
+            #     ):
+            #         sym = "1"
+            #     if sym is not None:
+            #         unit_obj["hasSymbolValue"] = sym
 
-                prop_obj["hasMeasurementUnit"] = unit_obj
+            #     prop_obj["hasMeasurementUnit"] = unit_obj
 
         elif isinstance(value, str):
-            # e.g. openCircuitPotential expressions
             prop_obj["hasStringPart"] = {
                 "@type": "String",
                 "hasStringValue": value,
             }
+            print("[string] ", _curie(g, subject), "=", value)
 
         elif isinstance(value, (list, dict)):
             # e.g. lookup tables, structured objects
-            prop_obj["hasJSONPart"] = value
+            if "functionname" in value:
+                func_name = str(value["functionname"])
+                prop_obj["hasStringPart"] = {
+                    "@type": "String",
+                    "hasStringValue": func_name,
+                }
+            else:
+                breakpoint()
+            print("[json] ", _curie(g, subject), "=", value)
 
         else:
             # fallback: keep it rather than dropping it
@@ -363,6 +366,7 @@ def export_jsonld(
                 "@type": "String",
                 "hasStringValue": str(value),
             }
+            print("[other] ", _curie(g, subject), "=", value)
 
         # Derive unit from ontology restrictions (if present)
         unit_class = _find_unit_class(g, subject, unit_pred) if unit_pred else None
@@ -396,3 +400,34 @@ def export_jsonld(
 
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(out, f, indent=2)
+
+    # Check what's in the original input vs what's exported
+    mapped_paths = set()
+
+    for s in ontology_parser.graph.subjects():
+        for p, o in ontology_parser.graph.predicate_objects(s):
+            if p == ontology_parser.key_map["battmo.m"]:
+                mapped_paths.add(tuple(ontology_parser.parse_key(str(o))))
+
+    def collect_json_paths(data, prefix=()):
+        paths = set()
+        if isinstance(data, dict):
+            for k, v in data.items():
+                paths |= collect_json_paths(v, prefix + (k,))
+        elif isinstance(data, list):
+            for i, v in enumerate(data):
+                paths |= collect_json_paths(v, prefix + (i,))
+        else:
+            paths.add(prefix)
+        return paths
+
+    input_paths = collect_json_paths(input_data)
+
+    missing = sorted(p for p in input_paths if p not in mapped_paths)
+
+    print("Number of JSON leaf values:", len(input_paths))
+    print("Number of mapped values:", len(mapped_paths))
+    print("Missing values:", len(missing))
+
+    for p in missing:
+        print("MISSING:", p)

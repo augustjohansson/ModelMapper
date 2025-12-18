@@ -4,6 +4,7 @@ test_pybamm.py
 
 # Ignore the virtual environment folder
 venv/
+env/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -5,24 +5,36 @@ import pybamm
 from rdflib import Graph, URIRef
 from jsonschema import validate, ValidationError
 import re
+import os
+from urllib.parse import urlparse
+from pathlib import Path
+from rdflib import Literal
+from rdflib.namespace import RDF
+
 
 class OntologyParser:
     def __init__(self, ontology_ref):
         self.graph = Graph()
 
-        if ontology_ref.startswith('http'):
+        if ontology_ref.startswith("http"):
             response = requests.get(ontology_ref)
             response.raise_for_status()
             response_text = response.text
         else:
-            with open(ontology_ref, 'r', encoding='utf-8') as f:
-                response_text = f.read().replace('\r\n', '\n')
+            with open(ontology_ref, "r", encoding="utf-8") as f:
+                response_text = f.read().replace("\r\n", "\n")
                 # print(response_text)
-        self.graph.parse(data=response_text, format='ttl')
+        self.graph.parse(data=response_text, format="ttl")
         self.key_map = {
-            'bpx': URIRef("https://w3id.org/emmo/domain/battery-model-lithium-ion#bmli_0a5b99ee_995b_4899_a79b_925a4086da37"),
-            'cidemod': URIRef("https://w3id.org/emmo/domain/battery-model-lithium-ion#bmli_1b718841_5d72_4071_bb71_fc4a754f5e30"),
-            'battmo.m': URIRef("https://w3id.org/emmo/domain/battery-model-lithium-ion#bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14"),
+            "bpx": URIRef(
+                "https://w3id.org/emmo/domain/battery-model-lithium-ion#bmli_0a5b99ee_995b_4899_a79b_925a4086da37"
+            ),
+            "cidemod": URIRef(
+                "https://w3id.org/emmo/domain/battery-model-lithium-ion#bmli_1b718841_5d72_4071_bb71_fc4a754f5e30"
+            ),
+            "battmo.m": URIRef(
+                "https://w3id.org/emmo/domain/battery-model-lithium-ion#bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14"
+            ),
             # 'battmo.jl': URIRef("https://w3id.org/emmo/domain/battery-model-lithium-ion#bmli_2c718841_6d73_5082_bb81_gc5b754f6e40")  # Placeholder URI
         }
 
@@ -37,7 +49,9 @@ class OntologyParser:
         input_key = self.key_map.get(input_type)
         output_key = self.key_map.get(output_type)
         if not input_key or not output_key:
-            raise ValueError(f"Invalid input or output type: {input_type}, {output_type}")
+            raise ValueError(
+                f"Invalid input or output type: {input_type}, {output_type}"
+            )
 
         mappings = {}
         for subject in self.graph.subjects():
@@ -53,12 +67,25 @@ class OntologyParser:
                 print(f"Mapping added: {tuple(input_value)} -> {tuple(output_value)}")
         return mappings
 
+
 class JSONLoader:
     @staticmethod
-    def load(json_url):
-        response = requests.get(json_url)
-        response.raise_for_status()
-        return response.json()
+    def load(source):
+        # Accept Path or str
+        source = Path(source)
+
+        # If it looks like a URL → load from web
+        if urlparse(str(source)).scheme in ("http", "https"):
+            response = requests.get(str(source))
+            response.raise_for_status()
+            return response.json()
+
+        # Else → treat as local file
+        if not source.is_file():
+            raise ValueError(f"File does not exist: {source}")
+
+        return json.loads(source.read_text(encoding="utf-8"))
+
 
 class JSONValidator:
     @staticmethod
@@ -71,11 +98,13 @@ class JSONValidator:
             print(f"JSON validation error: {e.message}")
             raise
 
+
 class JSONWriter:
     @staticmethod
     def write(data, output_path):
-        with open(output_path, 'w') as file:
+        with open(output_path, "w") as file:
             json.dump(data, file, indent=4)
+
 
 class ParameterMapper:
     def __init__(self, mappings, template, input_url, output_type, input_type):
@@ -89,11 +118,11 @@ class ParameterMapper:
     def map_parameters(self, input_data):
         output_data = self.template.copy()
         for input_key, output_key in self.mappings.items():
-            value = self.get_value_from_path(input_data, input_key)
+            value = get_value_from_path(input_data, input_key)
             if value is not None:
                 if isinstance(value, str):
                     value = self.replace_variables(value)
-                if self.input_type == 'cidemod' and 'kinetic_constant' in input_key:
+                if self.input_type == "cidemod" and "kinetic_constant" in input_key:
                     value = self.scale_kinetic_constant(value)
                 self.set_value_from_path(output_data, output_key, value)
                 self.remove_default_from_used(output_key)
@@ -103,8 +132,8 @@ class ParameterMapper:
 
     def replace_variables(self, value):
         if isinstance(value, str):
-            value = re.sub(r'\bx_s\b', 'x', value)
-            value = re.sub(r'\bc_e\b', 'x', value)
+            value = re.sub(r"\bx_s\b", "x", value)
+            value = re.sub(r"\bc_e\b", "x", value)
         return value
 
     def scale_kinetic_constant(self, value):
@@ -128,7 +157,8 @@ class ParameterMapper:
                 paths.update(self.get_all_paths(item, current_path))
         return paths
 
-    def get_value_from_path(self, data, keys):
+    @staticmethod
+    def get_value_from_path(data, keys):
         try:
             for key in keys:
                 if isinstance(key, str):
@@ -162,7 +192,9 @@ class ParameterMapper:
             final_key = keys[-1]
             if isinstance(final_key, str):
                 final_key = final_key.strip()
-            if isinstance(final_key, int) or (isinstance(final_key, str) and final_key.isdigit()):
+            if isinstance(final_key, int) or (
+                isinstance(final_key, str) and final_key.isdigit()
+            ):
                 final_key = int(final_key)
             data[final_key] = value
             print(f"Set value for path {keys}: {value}")
@@ -183,42 +215,117 @@ class ParameterMapper:
             "BPX": 0.1,
             "Title": "An autoconverted parameter set using BatteryModelMapper",
             "Description": f"This data set was automatically generated from {self.input_url}. Please check carefully.",
-            "Model": "DFN"
+            "Model": "DFN",
         }
         data.pop("Validation", None)
 
     def remove_high_level_defaults(self):
-        self.defaults_used = {path for path in self.defaults_used if not any(k in path for k in ["Parameterisation", "Header"])}
+        self.defaults_used = {
+            path
+            for path in self.defaults_used
+            if not any(k in path for k in ["Parameterisation", "Header"])
+        }
+
+
+RDF_JSON = URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#JSON")
+
+
+def export_jsonld(
+    ontology_parser: OntologyParser, input_type: str, input_data: dict, output_path: str
+):
+    input_key = ontology_parser.key_map.get(input_type)
+    if not input_key:
+        raise ValueError(f"Invalid input type: {input_type}")
+
+    out_g = Graph()
+    out_g.namespace_manager = ontology_parser.graph.namespace_manager
+
+    added = 0
+    mapped = 0
+
+    for subject in ontology_parser.graph.subjects():
+        raw_path_literal = None
+        input_path = None
+
+        for predicate, obj in ontology_parser.graph.predicate_objects(subject):
+            if predicate == input_key:
+                raw_path_literal = str(obj)
+                input_path = ontology_parser.parse_key(raw_path_literal)
+                break
+
+        if not input_path:
+            continue
+        mapped += 1
+
+        value = ParameterMapper.get_value_from_path(input_data, input_path)
+
+        # Always include the mapping path (so you can see what matched)
+        out_g.add((subject, input_key, Literal(raw_path_literal)))
+
+        # Only add a value triple if we actually found one
+        if value is not None:
+            if isinstance(value, (dict, list)):
+                out_g.add(
+                    (subject, RDF.value, Literal(json.dumps(value), datatype=RDF_JSON))
+                )
+            else:
+                out_g.add((subject, RDF.value, Literal(value)))
+            added += 1
+
+    print(
+        f"[jsonld] subjects-with-path: {mapped}, values-found: {added}, triples: {len(out_g)}"
+    )
+    out_g.serialize(destination=output_path, format="json-ld", indent=4)
+
 
 if __name__ == "__main__":
-    #ontology_ref = 'https://w3id.org/emmo/domain/battery-model-lithium-ion/latest'
-    ontology_ref = 'assets/battery-model-lithium-ion.ttl'
-    input_json_url = 'https://raw.githubusercontent.com/cidetec-energy-storage/cideMOD/main/data/data_Chen_2020/params_tuned_vOCPexpression.json'
-    output_json_path = 'converted_battery_parameters.json'
-    defaults_json_path = 'defaults_used.json'
-    template_url = 'https://raw.githubusercontent.com/BIG-MAP/ModelMapper/main/assets/bpx_template.json'
-    input_type = 'cidemod'
-    #output_type = 'bpx'
-    output_type = 'battmo.m'
+    # ontology_ref = "https://w3id.org/emmo/domain/battery-model-lithium-ion/latest"
+    ontology_ref = "assets/battery-model-lithium-ion.ttl"
+    # input_json = "https://raw.githubusercontent.com/cidetec-energy-storage/cideMOD/main/data/data_Chen_2020/params_tuned_vOCPexpression.json"
+    input_json = "/tmp/h0b-opt.json"
+    output_json_path = "converted_battery_parameters.json"
+    defaults_json_path = "defaults_used.json"
+    template_url = "https://raw.githubusercontent.com/BIG-MAP/ModelMapper/main/assets/bpx_template.json"
+    # input_type = "cidemod"
+    input_type = "battmo.m"
+    # output_type = 'bpx'
+    # output_type = "battmo.m"
+    output_type = "jsonld"
 
     # Initialize the OntologyParser
     ontology_parser = OntologyParser(ontology_ref)
-    mappings = ontology_parser.get_mappings(input_type, output_type)
-    print("Mappings:", json.dumps({str(k): str(v) for k, v in mappings.items()}, indent=4))
 
-    # # Load the input JSON file
-    # input_data = JSONLoader.load(input_json_url)
+    # Load the input JSON file
+    input_data = JSONLoader.load(input_json)
     # print("Input Data:", json.dumps(input_data, indent=4))
 
-    # # Load the template JSON file
-    # template_data = JSONLoader.load(template_url)
-    # template_data.pop("Validation", None)  # Remove validation if it exists in the template
+    if output_type == "jsonld":
 
-    # # Map the parameters using the mappings from the ontology
-    # parameter_mapper = ParameterMapper(mappings, template_data, input_json_url, output_type, input_type)
-    # output_data = parameter_mapper.map_parameters(input_data)
-    # defaults_used_data = list(parameter_mapper.defaults_used)
-    # print("Output Data:", json.dumps(output_data, indent=4))
+        output_jsonld_path = "converted_battery_parameters.jsonld"
+        export_jsonld(ontology_parser, input_type, input_data, output_jsonld_path)
+        print(f"Wrote JSON-LD to {output_jsonld_path}")
+
+    else:
+
+        mappings = ontology_parser.get_mappings(input_type, output_type)
+        print(
+            "Mappings:",
+            json.dumps({str(k): str(v) for k, v in mappings.items()}, indent=4),
+        )
+
+        # Load the template JSON file
+        template_data = JSONLoader.load(template_url)
+        template_data.pop(
+            "Validation", None
+        )  # Remove validation if it exists in the template
+
+        # Map the parameters using the mappings from the ontology
+        parameter_mapper = ParameterMapper(
+            mappings, template_data, input_json, output_type, input_type
+        )
+        output_data = parameter_mapper.map_parameters(input_data)
+        defaults_used_data = list(parameter_mapper.defaults_used)
+        print("Output Data:", json.dumps(output_data, indent=4))
 
     # # Write the output JSON file
     # JSONWriter.write(output_data, output_json_path)
@@ -242,7 +349,6 @@ if __name__ == "__main__":
 
     # # Create the simulation with the experiment
     # sim = pybamm.Simulation(model, experiment=experiment, parameter_values=parameter_values)
-
 
     # # Define initial concentration in negative and positive electrodes
     # parameter_values["Initial concentration in negative electrode [mol.m-3]"] = 0.0279 * parameter_values["Maximum concentration in negative electrode [mol.m-3]"]

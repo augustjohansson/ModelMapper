@@ -1,6 +1,7 @@
 import json
 import re
 
+
 class ParameterMapper:
     def __init__(self, mappings, template, input_url, output_type, input_type):
         self.mappings = mappings
@@ -17,18 +18,32 @@ class ParameterMapper:
             if value is not None:
                 if isinstance(value, str):
                     value = self.replace_variables(value)
-                if self.input_type == 'cidemod' and 'kinetic_constant' in input_key:
-                    value = self.scale_kinetic_constant(value)
+                if self.input_type == "cidemod":
+                    value = self.apply_cidemod_processing(input_key, value)
+                elif self.input_type == "battmo.m":
+                    value = self.apply_battmo_m_processing(input_key, value)
                 self.set_value_from_path(output_data, output_key, value)
                 self.remove_default_from_used(output_key)
         self.set_bpx_header(output_data)
         self.remove_high_level_defaults()
         return output_data
 
+    def apply_cidemod_processing(self, input_key, value):
+        if "kinetic_constant" in input_key:
+            return self.scale_kinetic_constant(value)
+        return value
+
+    def apply_battmo_m_processing(self, input_key, value):
+        # Placeholder for any battmo.m specific processing
+        if "therm" in input_key:
+            breakpoint()
+
+        return value
+
     def replace_variables(self, value):
         if isinstance(value, str):
-            value = re.sub(r'\bx_s\b', 'x', value)
-            value = re.sub(r'\bc_e\b', 'x', value)
+            value = re.sub(r"\bx_s\b", "x", value)
+            value = re.sub(r"\bc_e\b", "x", value)
         return value
 
     def scale_kinetic_constant(self, value):
@@ -66,7 +81,7 @@ class ParameterMapper:
                     return None
             return data
         except (KeyError, IndexError, ValueError, TypeError) as e:
-            print(f"Error accessing key {key} in path {keys}: {e}")
+            print(f"Warning: accessing key {key} in path {keys}: {e}")
             return None
 
     def set_value_from_path(self, data, keys, value):
@@ -86,7 +101,9 @@ class ParameterMapper:
             final_key = keys[-1]
             if isinstance(final_key, str):
                 final_key = final_key.strip()
-            if isinstance(final_key, int) or (isinstance(final_key, str) and final_key.isdigit()):
+            if isinstance(final_key, int) or (
+                isinstance(final_key, str) and final_key.isdigit()
+            ):
                 final_key = int(final_key)
             data[final_key] = value
             print(f"Set value for path {keys}: {value}")
@@ -107,9 +124,13 @@ class ParameterMapper:
             "BPX": 0.1,
             "Title": "An autoconverted parameter set using BatteryModelMapper",
             "Description": f"This data set was automatically generated from {self.input_url}. Please check carefully.",
-            "Model": "DFN"
+            "Model": "DFN",
         }
         data.pop("Validation", None)
 
     def remove_high_level_defaults(self):
-        self.defaults_used = {path for path in self.defaults_used if not any(k in path for k in ["Parameterisation", "Header"])}
+        self.defaults_used = {
+            path
+            for path in self.defaults_used
+            if not any(k in path for k in ["Parameterisation", "Header"])
+        }

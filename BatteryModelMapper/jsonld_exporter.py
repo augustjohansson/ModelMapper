@@ -70,11 +70,6 @@ def infer_unit_predicate(g):
     return best
 
 
-# -----------------------------
-# Small RDF helpers
-# -----------------------------
-
-
 def _localname(u: URIRef) -> str:
     s = str(u)
     return s.rsplit("#", 1)[-1].rsplit("/", 1)[-1]
@@ -112,11 +107,6 @@ def _find_any_predicate_by_localname(g, candidates: Set[str]) -> Optional[URIRef
         if _localname(p) in candidates:
             return p
     return None
-
-
-# -----------------------------
-# JSON path getter (silent)
-# -----------------------------
 
 
 def _get_value_from_path(data: Any, keys: List[Any]) -> Any:
@@ -196,9 +186,38 @@ def _find_unit_symbol(
     return None
 
 
-# -----------------------------
-# Main exporter
-# -----------------------------
+def _check_mapped_data(ontology_parser, input_data: Dict[str, Any]):
+
+    # Check what's in the original input vs what's exported
+    mapped_paths = set()
+
+    for s in ontology_parser.graph.subjects():
+        for p, o in ontology_parser.graph.predicate_objects(s):
+            if p == ontology_parser.key_map["battmo.m"]:
+                mapped_paths.add(tuple(ontology_parser.parse_key(str(o))))
+
+    def collect_json_paths(data, prefix=()):
+        paths = set()
+        if isinstance(data, dict):
+            for k, v in data.items():
+                paths |= collect_json_paths(v, prefix + (k,))
+        elif isinstance(data, list):
+            for i, v in enumerate(data):
+                paths |= collect_json_paths(v, prefix + (i,))
+        else:
+            paths.add(prefix)
+        return paths
+
+    input_paths = collect_json_paths(input_data)
+
+    missing = sorted(p for p in input_paths if p not in mapped_paths)
+
+    print("Number of JSON leaf values:", len(input_paths))
+    print("Number of mapped values:", len(mapped_paths))
+    print("Missing values:", len(missing))
+
+    for p in missing:
+        print("MISSING:", p)
 
 
 def export_jsonld(
@@ -401,33 +420,5 @@ def export_jsonld(
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(out, f, indent=2)
 
-    # Check what's in the original input vs what's exported
-    mapped_paths = set()
-
-    for s in ontology_parser.graph.subjects():
-        for p, o in ontology_parser.graph.predicate_objects(s):
-            if p == ontology_parser.key_map["battmo.m"]:
-                mapped_paths.add(tuple(ontology_parser.parse_key(str(o))))
-
-    def collect_json_paths(data, prefix=()):
-        paths = set()
-        if isinstance(data, dict):
-            for k, v in data.items():
-                paths |= collect_json_paths(v, prefix + (k,))
-        elif isinstance(data, list):
-            for i, v in enumerate(data):
-                paths |= collect_json_paths(v, prefix + (i,))
-        else:
-            paths.add(prefix)
-        return paths
-
-    input_paths = collect_json_paths(input_data)
-
-    missing = sorted(p for p in input_paths if p not in mapped_paths)
-
-    print("Number of JSON leaf values:", len(input_paths))
-    print("Number of mapped values:", len(mapped_paths))
-    print("Missing values:", len(missing))
-
-    for p in missing:
-        print("MISSING:", p)
+    # Final check of mapped vs input data
+    _check_mapped_data(ontology_parser, input_data)

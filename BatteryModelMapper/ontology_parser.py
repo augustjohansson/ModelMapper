@@ -1,17 +1,41 @@
+from pathlib import Path
+from urllib.parse import urlparse
+
 import ast
+import json
 import requests
-from rdflib import Graph, URIRef
+
+from rdflib import Graph, URIRef, OWL
+from rdflib.namespace import RDF
+
 
 class OntologyParser:
-    def __init__(self, ontology_url):
+    def __init__(self, ontology_ref):
         self.graph = Graph()
-        response = requests.get(ontology_url)
-        response.raise_for_status()
-        self.graph.parse(data=response.text, format='ttl')
+        ontology_ref = Path(ontology_ref)
+
+        if urlparse(str(ontology_ref)).scheme in ("http", "https"):
+            response = requests.get(ontology_ref)
+            response.raise_for_status()
+            response_text = response.text
+        elif ontology_ref.is_file():
+            with open(ontology_ref, "r", encoding="utf-8") as f:
+                response_text = f.read().replace("\r\n", "\n")
+        else:
+            raise ValueError(f"File does not exist: {ontology_ref}")
+
+        self.graph.parse(data=response_text, format="ttl")
+
         self.key_map = {
-            'bpx': URIRef("https://w3id.org/emmo/domain/battery-model-lithium-ion#bmli_0a5b99ee_995b_4899_a79b_925a4086da37"),
-            'cidemod': URIRef("https://w3id.org/emmo/domain/battery-model-lithium-ion#bmli_1b718841_5d72_4071_bb71_fc4a754f5e30"),
-            'battmo': URIRef("https://w3id.org/emmo/domain/battery-model-lithium-ion#bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14")  # Placeholder URI
+            "bpx": URIRef(
+                "https://w3id.org/emmo/domain/battery-model-lithium-ion#bmli_0a5b99ee_995b_4899_a79b_925a4086da37"
+            ),
+            "cidemod": URIRef(
+                "https://w3id.org/emmo/domain/battery-model-lithium-ion#bmli_1b718841_5d72_4071_bb71_fc4a754f5e30"
+            ),
+            "battmo.m": URIRef(
+                "https://w3id.org/emmo/domain/battery-model-lithium-ion#bmli_e5e86474_8623_48ea_a1cf_502bdb10aa14"
+            ),
         }
 
     def parse_key(self, key):
@@ -25,7 +49,9 @@ class OntologyParser:
         input_key = self.key_map.get(input_type)
         output_key = self.key_map.get(output_type)
         if not input_key or not output_key:
-            raise ValueError(f"Invalid input or output type: {input_type}, {output_type}")
+            raise ValueError(
+                f"Invalid input or output type: {input_type}, {output_type}"
+            )
 
         mappings = {}
         for subject in self.graph.subjects():

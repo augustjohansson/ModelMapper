@@ -1,10 +1,8 @@
 import json
 from typing import Any, Dict, List, Optional, Set, Union
+from collections import Counter
 from rdflib import BNode, URIRef
 from rdflib.namespace import RDF, RDFS, OWL, SKOS
-
-from collections import Counter
-from rdflib.namespace import RDF, OWL
 
 
 def _is_number_like(v: Any) -> bool:
@@ -128,11 +126,6 @@ def _get_value_from_path(data: Any, keys: List[Any]) -> Any:
         return cur
     except (KeyError, IndexError, ValueError, TypeError):
         return None
-
-
-# -----------------------------
-# Unit extraction from OWL restrictions
-# -----------------------------
 
 
 def _iter_restrictions(g, cls: URIRef):

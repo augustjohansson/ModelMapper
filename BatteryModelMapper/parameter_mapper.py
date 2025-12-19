@@ -30,7 +30,7 @@ class ParameterMapper:
 
     def apply_cidemod_processing(self, input_key, value):
         if "kinetic_constant" in input_key:
-            return self.scale_kinetic_constant(value)
+            return value * 1e6
         return value
 
     def apply_battmo_m_processing(self, input_key, value):
@@ -45,13 +45,6 @@ class ParameterMapper:
             value = re.sub(r"\bx_s\b", "x", value)
             value = re.sub(r"\bc_e\b", "x", value)
         return value
-
-    def scale_kinetic_constant(self, value):
-        try:
-            return value * 1e6
-        except TypeError:
-            print(f"Error scaling kinetic_constant value: {value}")
-            return value
 
     def get_all_paths(self, data, path=""):
         paths = set()

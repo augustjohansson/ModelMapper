@@ -18,27 +18,11 @@ class ParameterMapper:
             if value is not None:
                 if isinstance(value, str):
                     value = self.replace_variables(value)
-                if self.input_type == "cidemod":
-                    value = self.apply_cidemod_processing(input_key, value)
-                elif self.input_type == "battmo.m":
-                    value = self.apply_battmo_m_processing(input_key, value)
                 self.set_value_from_path(output_data, output_key, value)
                 self.remove_default_from_used(output_key)
         self.set_bpx_header(output_data)
         self.remove_high_level_defaults()
         return output_data
-
-    def apply_cidemod_processing(self, input_key, value):
-        if "kinetic_constant" in input_key:
-            return value * 1e6
-        return value
-
-    def apply_battmo_m_processing(self, input_key, value):
-        # Placeholder for any battmo.m specific processing
-        if "therm" in input_key:
-            breakpoint()
-
-        return value
 
     def replace_variables(self, value):
         if isinstance(value, str):

@@ -57,6 +57,11 @@ if __name__ == "__main__":
     input_data = bmm.JSONLoader.load(input_json)
     # print("Input Data:", json.dumps(input_data, indent=4))
 
+    # Preprocessing
+    preprocessor = bmm.PreprocessInput(input_type, input_data)
+    input_data = preprocessor.process()
+    breakpoint()
+
     if output_type == "jsonld":
 
         bmm.export_jsonld(

@@ -19,13 +19,14 @@ class PreprocessInput:
 
     def _process_battmo_m(self):
         # Save NE and PE porosities computed from volume fractions
-        for elde in ["NegativeElectrode", "PositiveElectrode"]:
-            coating = self.input_data.get(f"{elde}")
-            vf = coating.get("volumeFraction")
-            if vf is not None:
+        eldes = ["NegativeElectrode", "PositiveElectrode"]
+        for elde in eldes:
+            elde_data = self.input_data.get(elde)
+            co_data = elde_data.get("Coating")
+            vf = co_data.get("volumeFraction")
+            if vf is None:
+                raise ValueError(f"Missing volumeFraction data for {elde}")
+            else:
                 porosity = 1.0 - vf
-                if electrode == "negative_electrode":
-                    self.input_data["NegativeElectrodeCoatingPorosity"] = porosity
-                else:
-                    self.input_data["PositiveElectrodeCoatingPorosity"] = porosity
+                self.input_data[elde]["Coating"]["porosity"] = porosity
         return self.input_data

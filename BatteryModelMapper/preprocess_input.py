@@ -12,6 +12,7 @@ class PreprocessInput:
             raise ValueError(f"Unsupported input type: {self.input_type}")
 
     def _process_cidemod(self):
+        # Scale kinetic constant
         for key, value in self.input_data.items():
             if "kinetic_constant" in key:
                 self.input_data[key] = value * 1e6
@@ -29,4 +30,5 @@ class PreprocessInput:
             else:
                 porosity = 1.0 - vf
                 self.input_data[elde]["Coating"]["porosity"] = porosity
+
         return self.input_data

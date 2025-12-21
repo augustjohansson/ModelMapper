@@ -19,7 +19,7 @@ def _is_number_like(v: Any) -> bool:
     return False
 
 
-def _localname(u: URIRef) -> str:
+def _get_modellib_hash(u: URIRef) -> str:
     s = str(u)
     return s.rsplit("#", 1)[-1].rsplit("/", 1)[-1]
 
@@ -37,7 +37,7 @@ def _first_literal_str(g, subj: URIRef, pred: URIRef) -> Optional[str]:
     return None
 
 
-def _label(g, term: URIRef) -> str:
+def _get_skos_prefLabel(g, term: URIRef) -> str:
     return (
         _first_literal_str(g, term, SKOS.prefLabel)
         or _first_literal_str(g, term, RDFS.label)
@@ -47,7 +47,7 @@ def _label(g, term: URIRef) -> str:
 
 def _find_any_predicate_by_localname(g, candidates: Set[str]) -> Optional[URIRef]:
     for p in set(g.predicates()):
-        if _localname(p) in candidates:
+        if _get_modellib_hash(p) in candidates:
             return p
     return None
 
@@ -80,9 +80,10 @@ def _iter_restrictions(g, cls: URIRef):
 
 def _find_missing_values(ontology_parser, input_data, input_type):
     mapped_paths = set()
+    key = ontology_parser.key_map.get(input_type)
     for s in ontology_parser.graph.subjects():
         for p, o in ontology_parser.graph.predicate_objects(s):
-            if p == ontology_parser.key_map.get("battmo.m"):
+            if p == key:
                 mapped_paths.add(tuple(ontology_parser.parse_key(str(o))))
 
     def collect_json_paths(data, prefix=()):
@@ -99,6 +100,30 @@ def _find_missing_values(ontology_parser, input_data, input_type):
 
     input_paths = collect_json_paths(input_data)
     missing = sorted(p for p in input_paths if p not in mapped_paths)
+    return input_paths, mapped_paths, missing
+
+
+def _find_any_predicate_by_localname(g, candidates: Set[str]) -> Optional[URIRef]:
+    for p in set(g.predicates()):
+        if _get_modellib_hash(p) in candidates:
+            return p
+    return None
+
+
+def _get_unit_for_subject(g, subject: URIRef) -> Optional[str]:
+    # Get the unit for a given subject if defined
+    unit_predicates = {"hasMeasurementUnit", "hasUnit", "unit"}
+    unit_pred = _find_any_predicate_by_localname(g, unit_predicates)
+    if unit_pred:
+        for unit in g.objects(subject, unit_pred):
+            return _curie(g, unit)
+    else:
+        # Assume SI units based on common property names
+        # breakpoint()
+
+        # Get skos preflabel if exists
+        label = _get_skos_prefLabel(g, subject)
+        breakpoint()
 
 
 def export_jsonld(
@@ -125,12 +150,10 @@ def export_jsonld(
     has_property = out["@graph"]["hasProperty"]
 
     for subject in set(g.subjects(input_key, None)):
-        raw_path_literal = None
         path = None
         for p, o in g.predicate_objects(subject):
             if p == input_key:
-                raw_path_literal = str(o)
-                path = ontology_parser.parse_key(raw_path_literal)
+                path = ontology_parser.parse_key(str(o))
                 break
         if not path:
             continue
@@ -140,7 +163,7 @@ def export_jsonld(
 
         prop_obj = {
             "@type": _curie(g, subject),
-            "rdfs:label": _label(g, subject),
+            "rdfs:label": _get_skos_prefLabel(g, subject),
         }
 
         if _is_number_like(value):
@@ -161,7 +184,6 @@ def export_jsonld(
                     "hasStringValue": func_name,
                 }
             else:
-                # fallback for structured objects
                 prop_obj["hasStringPart"] = {
                     "@type": "String",
                     "hasStringValue": str(value),
@@ -173,11 +195,18 @@ def export_jsonld(
             }
         has_property.append(prop_obj)
 
+        # Add units
+        unit = _get_unit_for_subject(g, subject)
+        if unit:
+            prop_obj["emmo:hasMeasurementUnit"] = unit
+
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(out, f, indent=2)
 
     # Find values not mapped
-    missing = find_missing_values(ontology_parser, input_data, input_type)
+    input_paths, mapped_paths, missing = _find_missing_values(
+        ontology_parser, input_data, input_type
+    )
 
     print("Number of JSON leaf values:", len(input_paths))
     print("Number of mapped values:", len(mapped_paths))

@@ -39,16 +39,17 @@ if __name__ == "__main__":
 
     # Specify input
     # input_json = "https://raw.githubusercontent.com/cidetec-energy-storage/cideMOD/main/data/data_Chen_2020/params_tuned_vOCPexpression.json"
-    # input_json = "/tmp/h0b-opt.json"
-    input_json = "/tmp/mj1.json"
+    input_json = "/tmp/h0b-opt.json"
+    # input_json = "/tmp/mj1.json"
     # input_type = "cidemod"
     input_type = "battmo.m"
 
     # Specify output
-    output_json = "mj1_bpx.json"
-    output_type = "bpx"
+    # output_json = "mj1_bpx.json"
+    # output_type = "bpx"
     # output_type = "battmo.m"
-    # output_type = "jsonld"
+    output_json = "/tmp/h0b-opt.jsonld"
+    output_type = "jsonld"
 
     # Initialize the OntologyParser
     ontology_parser = bmm.OntologyParser(ontology_ref)
@@ -60,7 +61,6 @@ if __name__ == "__main__":
     # Preprocessing
     preprocessor = bmm.PreprocessInput(input_type, input_data)
     input_data = preprocessor.process()
-    breakpoint()
 
     if output_type == "jsonld":
 

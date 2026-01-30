@@ -77,22 +77,27 @@ def run(
         bmm.JSONWriter().write(output_data, output_file)
 
 
-if __name__ == "__main__":
+def input_parser()
 
     parser = argparse.ArgumentParser(description="Battery Model Mapper CLI")
+
+    types = ["bpx", "cidemod", "battmo.m", "jsonld"]
+    input_types = list(set(types) - {"jsonld"})
+    output_types = types
+
     parser.add_argument("-input-file", required=True, help="Input filename")
-    parser.add_argument("-input-type", required=True, help="Input type string")
+    parser.add_argument("-input-type", required=True, help=f"Input type string (must be one of {input_types})")
     parser.add_argument(
         "-output-file", required=False, default="output.jsonld", help="Output filename"
     )
     parser.add_argument(
-        "-output-type", required=True, default="jsonld", help="Output type string"
+        "-output-type", required=False, default="jsonld", help=f"Output type string (must be one of {output_types})"
     )
     parser.add_argument(
-        "-cell-id", required=True, help="Cell ID (eg BattMo) for JSON-LD output"
+        "-cell-id", required=False, default="Cell ID", help="Cell ID (eg BattMo) for JSON-LD output"
     )
     parser.add_argument(
-        "-cell-type", required=True, help="Cell Type (eg Pouch) for JSON-LD output"
+        "-cell-type", required=False, default="Pouch", help="Cell Type (eg Pouch) for JSON-LD output"
     )
     parser.add_argument(
         "-ontology-ref",
@@ -102,7 +107,20 @@ if __name__ == "__main__":
     parser.add_argument(
         "-template-ref", default="assets/bpx_template.json", help="Template file path"
     )
+    return parser, input_types, output_types
+
+
+if __name__ == "__main__":
+
+    # Parse input
+    parser, input_types, output_types = input_parser()
     args = parser.parse_args()
+
+    # Check the input and output types
+    if args.input_type not in input_types:
+        raise ValueError(f"Invalid input type: {args.input_type}")
+    if args.output_type not in output_types:
+        raise ValueError(f"Invalid output type: {args.output_type}")
 
     run(
         input_file=args.input_file,

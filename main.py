@@ -1,12 +1,5 @@
-import os
-import re
 import json
-from pathlib import Path
-from urllib.parse import urlparse
-
-import requests
-from jsonschema import validate, ValidationError
-
+import argparse
 import BatteryModelMapper as bmm
 
 
@@ -28,34 +21,22 @@ def fix_battmo_porosity(label, input_path, input_data):
             return porosity
 
 
-if __name__ == "__main__":
-
-    # Load references
-    # ontology_ref = "https://w3id.org/emmo/domain/battery-model-lithium-ion/latest"
-    ontology_ref = "assets/battery-model-lithium-ion.ttl"
-    # template_ref = "https://raw.githubusercontent.com/BIG-MAP/ModelMapper/main/assets/bpx_template.json"
-    template_ref = "assets/bpx_template.json"
-    defaults_json_path = "defaults_used.json"
-
-    # Specify input
-    # input_json = "https://raw.githubusercontent.com/cidetec-energy-storage/cideMOD/main/data/data_Chen_2020/params_tuned_vOCPexpression.json"
-    input_json = "/tmp/h0b-opt.json"
-    # input_json = "/tmp/mj1.json"
-    # input_type = "cidemod"
-    input_type = "battmo.m"
-
-    # Specify output
-    # output_json = "mj1_bpx.json"
-    # output_type = "bpx"
-    # output_type = "battmo.m"
-    output_json = "/tmp/h0b-opt.jsonld"
-    output_type = "jsonld"
+def run(
+    input_file,
+    input_type,
+    output_file,
+    output_type,
+    cell_id,
+    cell_type,
+    ontology_ref="assets/battery-model-lithium-ion.ttl",
+    template_ref="assets/bpx_template.json",
+):
 
     # Initialize the OntologyParser
     ontology_parser = bmm.OntologyParser(ontology_ref)
 
     # Load the input JSON file
-    input_data = bmm.JSONLoader.load(input_json)
+    input_data = bmm.JSONLoader.load(input_file)
     # print("Input Data:", json.dumps(input_data, indent=4))
 
     # Preprocessing
@@ -68,9 +49,9 @@ if __name__ == "__main__":
             ontology_parser=ontology_parser,
             input_type=input_type,
             input_data=input_data,
-            output_path=output_json,
-            cell_id="BattMo",
-            cell_type="PouchCell",
+            output_path=output_file,
+            cell_id=cell_id,
+            cell_type=cell_type,
         )
 
     else:
@@ -89,9 +70,47 @@ if __name__ == "__main__":
 
         # Map the parameters using the mappings from the ontology
         parameter_mapper = bmm.ParameterMapper(
-            mappings, template_data, input_json, output_type, input_type
+            mappings, template_data, input_file, output_type, input_type
         )
         output_data = parameter_mapper.map_parameters(input_data)
         # defaults_used_data = list(parameter_mapper.defaults_used)
-        bmm.JSONWriter().write(output_data, output_json)
-        breakpoint()
+        bmm.JSONWriter().write(output_data, output_file)
+
+
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser(description="Battery Model Mapper CLI")
+    parser.add_argument("-input-file", required=True, help="Input filename")
+    parser.add_argument("-input-type", required=True, help="Input type string")
+    parser.add_argument(
+        "-output-file", required=False, default="output.jsonld", help="Output filename"
+    )
+    parser.add_argument(
+        "-output-type", required=True, default="jsonld", help="Output type string"
+    )
+    parser.add_argument(
+        "-cell-id", required=True, help="Cell ID (eg BattMo) for JSON-LD output"
+    )
+    parser.add_argument(
+        "-cell-type", required=True, help="Cell Type (eg Pouch) for JSON-LD output"
+    )
+    parser.add_argument(
+        "-ontology-ref",
+        default="assets/battery-model-lithium-ion.ttl",
+        help="Ontology file path",
+    )
+    parser.add_argument(
+        "-template-ref", default="assets/bpx_template.json", help="Template file path"
+    )
+    args = parser.parse_args()
+
+    run(
+        input_file=args.input_file,
+        input_type=args.input_type,
+        output_file=args.output_file,
+        output_type=args.output_type,
+        cell_id=args.cell_id,
+        cell_type=args.cell_type,
+        ontology_ref=args.ontology_ref,
+        template_ref=args.template_ref,
+    )

@@ -211,5 +211,9 @@ def export_jsonld(
     print("Number of JSON leaf values:", len(input_paths))
     print("Number of mapped values:", len(mapped_paths))
     print("Missing values:", len(missing))
+    print("These are missing values from the ontology mapping:")
     for p in missing:
-        print("MISSING:", p)
+        print(" ", ".".join(str(x) for x in p))
+    print("Write these missing values to 'missing_values.json'")
+    with open("missing_values.json", "w", encoding="utf-8") as f:
+        json.dump([".".join(str(x) for x in p) for p in missing], f, indent=2)

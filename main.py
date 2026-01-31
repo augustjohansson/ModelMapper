@@ -77,7 +77,7 @@ def run(
         bmm.JSONWriter().write(output_data, output_file)
 
 
-def input_parser()
+def input_parser():
 
     parser = argparse.ArgumentParser(description="Battery Model Mapper CLI")
 
@@ -86,18 +86,31 @@ def input_parser()
     output_types = types
 
     parser.add_argument("-input-file", required=True, help="Input filename")
-    parser.add_argument("-input-type", required=True, help=f"Input type string (must be one of {input_types})")
+    parser.add_argument(
+        "-input-type",
+        required=True,
+        help=f"Input type string (must be one of {input_types})",
+    )
     parser.add_argument(
         "-output-file", required=False, default="output.jsonld", help="Output filename"
     )
     parser.add_argument(
-        "-output-type", required=False, default="jsonld", help=f"Output type string (must be one of {output_types})"
+        "-output-type",
+        required=False,
+        default="jsonld",
+        help=f"Output type string (must be one of {output_types})",
     )
     parser.add_argument(
-        "-cell-id", required=False, default="Cell ID", help="Cell ID (eg BattMo) for JSON-LD output"
+        "-cell-id",
+        required=False,
+        default="Cell ID",
+        help="Cell ID (eg BattMo) for JSON-LD output",
     )
     parser.add_argument(
-        "-cell-type", required=False, default="Pouch", help="Cell Type (eg Pouch) for JSON-LD output"
+        "-cell-type",
+        required=False,
+        default="Pouch",
+        help="Cell Type (eg Pouch) for JSON-LD output",
     )
     parser.add_argument(
         "-ontology-ref",

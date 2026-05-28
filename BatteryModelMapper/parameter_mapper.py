@@ -4,6 +4,7 @@ import re
 
 class ParameterMapper:
     def __init__(self, mappings, template, input_url, output_type, input_type):
+        """Store mapping context and track which template defaults remain in use."""
         self.mappings = mappings
         self.template = template
         self.input_url = input_url
@@ -12,6 +13,7 @@ class ParameterMapper:
         self.defaults_used = set(self.get_all_paths(template))
 
     def map_parameters(self, input_data):
+        """Apply configured path mappings to populate an output parameter template."""
         output_data = self.template.copy()
         for input_key, output_key in self.mappings.items():
             value = self.get_value_from_path(input_data, input_key)
@@ -25,12 +27,14 @@ class ParameterMapper:
         return output_data
 
     def replace_variables(self, value):
+        """Rename known expression variables to the variable name expected by BPX."""
         if isinstance(value, str):
             value = re.sub(r"\bx_s\b", "x", value)
             value = re.sub(r"\bc_e\b", "x", value)
         return value
 
     def get_all_paths(self, data, path=""):
+        """Collect all nested dictionary and list paths present in a JSON-like object."""
         paths = set()
         if isinstance(data, dict):
             for key, value in data.items():
@@ -45,6 +49,7 @@ class ParameterMapper:
         return paths
 
     def get_value_from_path(self, data, keys):
+        """Read a nested value from dictionaries/lists using a sequence of path keys."""
         try:
             for key in keys:
                 if isinstance(key, str):
@@ -62,6 +67,7 @@ class ParameterMapper:
             return None
 
     def set_value_from_path(self, data, keys, value):
+        """Set a nested value in dictionaries/lists, creating missing containers as needed."""
         try:
             for key in keys[:-1]:
                 if isinstance(key, str):
@@ -88,6 +94,7 @@ class ParameterMapper:
             print(f"Error setting value for path {keys}: {e}")
 
     def remove_default_from_used(self, keys):
+        """Mark a template path as replaced so it is no longer counted as a default."""
         path = "Parameterisation"
         for key in keys:
             if isinstance(key, str):
@@ -97,6 +104,7 @@ class ParameterMapper:
         self.defaults_used.discard(path)
 
     def set_bpx_header(self, data):
+        """Replace the BPX header with metadata describing the converted parameter set."""
         data["Header"] = {
             "BPX": 0.1,
             "Title": "An autoconverted parameter set using BatteryModelMapper",
@@ -106,6 +114,7 @@ class ParameterMapper:
         data.pop("Validation", None)
 
     def remove_high_level_defaults(self):
+        """Filter bookkeeping so only relevant leaf-level defaults remain tracked."""
         self.defaults_used = {
             path
             for path in self.defaults_used

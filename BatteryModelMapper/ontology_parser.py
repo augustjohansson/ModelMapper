@@ -11,6 +11,7 @@ from rdflib.namespace import RDF
 
 class OntologyParser:
     def __init__(self, ontology_ref):
+        """Load a Turtle ontology from a local path or URL and prepare format keys."""
         self.graph = Graph()
         ontology_ref = Path(ontology_ref)
 
@@ -39,6 +40,7 @@ class OntologyParser:
         }
 
     def parse_key(self, key):
+        """Parse an ontology key annotation string into a Python path list."""
         try:
             return ast.literal_eval(key)
         except (ValueError, SyntaxError) as e:
@@ -46,6 +48,7 @@ class OntologyParser:
             return []
 
     def get_mappings(self, input_type, output_type):
+        """Return JSON path mappings between two supported model parameter formats."""
         input_key = self.key_map.get(input_type)
         output_key = self.key_map.get(output_type)
         if not input_key or not output_key:

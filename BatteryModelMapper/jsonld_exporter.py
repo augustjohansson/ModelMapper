@@ -5,6 +5,7 @@ from rdflib.namespace import RDF, RDFS, OWL, SKOS
 
 
 def _is_number_like(v: Any) -> bool:
+    """Return True when a value is numeric or can be parsed as a number."""
     if isinstance(v, (int, float)) and not isinstance(v, bool):
         return True
     if isinstance(v, str):
@@ -20,11 +21,13 @@ def _is_number_like(v: Any) -> bool:
 
 
 def _get_modellib_hash(u: URIRef) -> str:
+    """Extract the local identifier from a URIRef, handling hash and slash URIs."""
     s = str(u)
     return s.rsplit("#", 1)[-1].rsplit("/", 1)[-1]
 
 
 def _curie(g, term: URIRef) -> str:
+    """Convert a URIRef to a compact CURIE when the graph has a matching namespace."""
     try:
         return g.namespace_manager.normalizeUri(term)
     except Exception:
@@ -32,12 +35,14 @@ def _curie(g, term: URIRef) -> str:
 
 
 def _first_literal_str(g, subj: URIRef, pred: URIRef) -> Optional[str]:
+    """Return the first object for a subject/predicate pair as a string, if present."""
     for o in g.objects(subj, pred):
         return str(o)
     return None
 
 
 def _get_skos_prefLabel(g, term: URIRef) -> str:
+    """Get a readable label for an ontology term, falling back to its compact URI."""
     return (
         _first_literal_str(g, term, SKOS.prefLabel)
         or _first_literal_str(g, term, RDFS.label)
@@ -46,6 +51,7 @@ def _get_skos_prefLabel(g, term: URIRef) -> str:
 
 
 def _find_any_predicate_by_localname(g, candidates: Set[str]) -> Optional[URIRef]:
+    """Find the first graph predicate whose local name matches one of the candidates."""
     for p in set(g.predicates()):
         if _get_modellib_hash(p) in candidates:
             return p
@@ -53,6 +59,7 @@ def _find_any_predicate_by_localname(g, candidates: Set[str]) -> Optional[URIRef
 
 
 def _get_value_from_path(data: Any, keys: List[Any]) -> Any:
+    """Read a nested value from JSON-like dictionaries/lists using path keys."""
     cur = data
     try:
         for k in keys:
@@ -70,6 +77,7 @@ def _get_value_from_path(data: Any, keys: List[Any]) -> Any:
 
 
 def _iter_restrictions(g, cls: URIRef):
+    """Yield OWL restriction blank nodes attached to a class."""
     for sc in g.objects(cls, RDFS.subClassOf):
         if isinstance(sc, BNode) and (sc, RDF.type, OWL.Restriction) in g:
             yield sc
@@ -79,6 +87,7 @@ def _iter_restrictions(g, cls: URIRef):
 
 
 def _find_missing_values(ontology_parser, input_data, input_type):
+    """Compare input leaf paths with ontology-mapped paths and return unmapped values."""
     mapped_paths = set()
     key = ontology_parser.key_map.get(input_type)
     for s in ontology_parser.graph.subjects():
@@ -87,6 +96,7 @@ def _find_missing_values(ontology_parser, input_data, input_type):
                 mapped_paths.add(tuple(ontology_parser.parse_key(str(o))))
 
     def collect_json_paths(data, prefix=()):
+        """Recursively collect leaf paths from JSON-like dictionaries and lists."""
         paths = set()
         if isinstance(data, dict):
             for k, v in data.items():
@@ -104,6 +114,7 @@ def _find_missing_values(ontology_parser, input_data, input_type):
 
 
 def _find_any_predicate_by_localname(g, candidates: Set[str]) -> Optional[URIRef]:
+    """Find the first graph predicate whose local name matches one of the candidates."""
     for p in set(g.predicates()):
         if _get_modellib_hash(p) in candidates:
             return p
@@ -111,6 +122,7 @@ def _find_any_predicate_by_localname(g, candidates: Set[str]) -> Optional[URIRef
 
 
 def _get_unit_for_subject(g, subject: URIRef) -> Optional[str]:
+    """Look up a measurement unit annotation for an ontology subject, if one exists."""
     # Get the unit for a given subject if defined
     unit_predicates = {"hasMeasurementUnit", "hasUnit", "unit"}
     unit_pred = _find_any_predicate_by_localname(g, unit_predicates)
@@ -134,6 +146,7 @@ def export_jsonld(
     cell_id: str = "BattMo",
     cell_type: str = "PouchCell",
 ):
+    """Export mapped input parameters as a JSON-LD battery cell property graph."""
     g = ontology_parser.graph
     input_key = ontology_parser.key_map.get(input_type)
     if not input_key:

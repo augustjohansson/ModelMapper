@@ -7,6 +7,7 @@ import requests
 class JSONLoader:
     @staticmethod
     def load(source):
+        """Load JSON data from a local file path or an HTTP(S) URL."""
         source = Path(source)
 
         if urlparse(str(source)).scheme in ("http", "https"):
